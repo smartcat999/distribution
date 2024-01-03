@@ -262,7 +262,7 @@ func (registry *Registry) ListenAndServe() error {
 			tlsConf.GetCertificate = m.GetCertificate
 		} else {
 			tlsConf.Certificates = make([]tls.Certificate, 1)
-			tlsConf.Certificates[0], err = tls.LoadX509KeyPair(config.HTTP.TLS.Certificate, config.HTTP.TLS.Key)
+			tlsConf.Certificates[0], err = configuration.LoadX509KeyPair(config.HTTP.TLS.Certificate, config.HTTP.TLS.Key)
 			if err != nil {
 				return err
 			}
