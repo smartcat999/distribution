@@ -74,7 +74,7 @@ func LoadX509KeyPair(certFile, keyFile string) (tls.Certificate, error) {
 	if err != nil {
 		return cert, err
 	}
-	if pkey, err := ParseRSAPrivateKeyFromPEMWithPassword(keyPEMBlock); err == nil {
+	if pkey, err := ParseRSAPrivateKeyFromPEMWithPassword(keyPEMBlock); err == nil && pkey != nil {
 		keyPEMBlock = ParseRSAPrivateKeyToMemory(pkey)
 	}
 	cert, err = tls.X509KeyPair(certPEMBlock, keyPEMBlock)
@@ -91,7 +91,7 @@ func Decrypt(plaintext string, key string) ([]byte, error) {
 
 	block, err := aes.NewCipher(cipherKey)
 	if err != nil {
-		panic(err.Error())
+		return nil, err
 	}
 
 	aesgcm, err := cipher.NewGCM(block)

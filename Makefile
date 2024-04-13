@@ -27,11 +27,11 @@ WHALE = "+"
 
 # Go files
 #
-BUILTIN_DATA=${BUILTIN_DATA:-"6e536c7a7553624d654438363030303345766c4b305575634b2f677a61773331"}
+BUILTIN_DATA ?= 6e536c7a7553624d654438363030303345766c4b305575634b2f677a61773331
 TESTFLAGS_RACE=
 GOFILES=$(shell find . -type f -name '*.go')
 GO_TAGS=$(if $(BUILDTAGS),-tags "$(BUILDTAGS)",)
-GO_LDFLAGS=-ldflags '-s -w -X $(PKG)/version.Version=$(VERSION) -X $(PKG)/version.Revision=$(REVISION) -X $(PKG)/version.Package=$(PKG) $(EXTRA_LDFLAGS) -X $(PKG)/configuration.Data=${BUILTIN_DATA}'
+GO_LDFLAGS=-ldflags '-s -w -X $(PKG)/version.Version=$(VERSION) -X $(PKG)/version.Revision=$(REVISION) -X $(PKG)/version.Package=$(PKG) -X $(PKG)/configuration.Data=${BUILTIN_DATA} $(EXTRA_LDFLAGS)'
 
 BINARIES=$(addprefix bin/,$(COMMANDS))
 
@@ -89,6 +89,7 @@ FORCE:
 # Build a binary from a cmd.
 bin/%: cmd/% FORCE
 	@echo "$(WHALE) $@${BINARY_SUFFIX}"
+	@echo ${GO_LDFLAGS}
 	@go build ${GO_GCFLAGS} ${GO_BUILD_FLAGS} -o $@${BINARY_SUFFIX} ${GO_LDFLAGS} ${GO_TAGS}  ./$<
 
 binaries: $(BINARIES) ## build binaries
